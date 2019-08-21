@@ -30,14 +30,16 @@ int main()
     // Load a layout
     MyGUI::LayoutManager::getInstance().loadLayout("Console.layout");
 
-    while (window.isOpen())
+    // Use a flag to not destroy the context before the end of the loop
+    bool running = true;
+    while (running)
     {
         auto event = sf::Event();
         while (window.pollEvent(event))
         {
             MyGUI::SFML::injectEvent(event);
             if (event.type == sf::Event::Closed)
-                window.close();
+                running = false;
         }
 
         window.clear(sf::Color::Black);
