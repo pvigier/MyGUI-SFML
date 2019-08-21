@@ -32,10 +32,9 @@ add_library(mygui-sfml
     src/SFMLImageLoader.cpp)
 target_include_directories(mygui-sfml PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/ext/include/MYGUI>
+    $<BUILD_INTERFACE:${SFML_INCLUDE_DIR}>
     $<INSTALL_INTERFACE:include>)
-target_include_directories(mygui-sfml PUBLIC
-    ${SFML_INCLUDE_DIR}
-    "${CMAKE_SOURCE_DIR}/ext/include/MYGUI")
 
 # Examples
 
@@ -43,3 +42,27 @@ option (BUILD_EXAMPLES "Build the examples." ON)
 if (BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()
+
+# Install
+
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+    ${CMAKE_BINARY_DIR}/mygui-sfmlConfigVersion.cmake
+    VERSION
+    COMPATIBILITY AnyNewerVersion)
+configure_package_config_file(
+    ${CMAKE_SOURCE_DIR}/cmake/mygui-sfmlConfig.cmake.in
+    ${CMAKE_BINARY_DIR}/mygui-sfmlConfig.cmake
+    INSTALL_DESTINATION lib/cmake/mygui-sfml)
+
+install(TARGETS mygui-sfml EXPORT mygui-sfmlTargets
+    INCLUDES DESTINATION include
+    ARCHIVE DESTINATION lib)
+install(EXPORT mygui-sfmlTargets
+    FILE mygui-sfmlTargets.cmake
+    DESTINATION lib/cmake/mygui-sfml)
+install(FILES
+    ${CMAKE_BINARY_DIR}/mygui-sfmlConfigVersion.cmake
+    ${CMAKE_BINARY_DIR}/mygui-sfmlConfig.cmake
+    DESTINATION lib/cmake/mygui-sfml)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/ DESTINATION include)
