@@ -1,5 +1,5 @@
 #include "MyGUI/SFML/Event.h"
-#include <MyGUI.h> // TODO: use more specialized headers
+#include <MyGUI_InputManager.h>
 #include <SFML/Window/Event.hpp>
 
 namespace MyGUI
