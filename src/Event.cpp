@@ -24,7 +24,11 @@ void injectEvent(const sf::Event& event)
             inputManager.injectKeyRelease(getKeyCode(event.key.code));
             break;
         case sf::Event::TextEntered:
-            inputManager.injectKeyPress(MyGUI::KeyCode::None, event.text.unicode);
+            // Must filter some codes to have correct behavior
+            if (event.text.unicode != 8 && // Backspace
+                event.text.unicode != 13 && // Return
+                event.text.unicode != 127) // Delete
+                inputManager.injectKeyPress(MyGUI::KeyCode::None, event.text.unicode);
             break;
         case sf::Event::MouseButtonPressed:
             inputManager.injectMousePress(event.mouseButton.x, event.mouseButton.y,
@@ -35,7 +39,7 @@ void injectEvent(const sf::Event& event)
                 getMouseButton(event.mouseButton.button));
             break;
         case sf::Event::MouseMoved:
-            inputManager.injectMouseMove(event.mouseMove.x, event.mouseMove.y, 0);
+            inputManager.injectMouseMove(event.mouseMove.x, event.mouseMove.y, mouseZ);
             break;
         case sf::Event::MouseWheelScrolled:
             mouseZ += event.mouseWheelScroll.delta;
