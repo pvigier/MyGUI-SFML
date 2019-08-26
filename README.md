@@ -10,7 +10,7 @@ Alternatively, you can install MyGUI in an `ext` folder. Then, no change should 
 
 ## Usage
 
-See the [example](https://github.com/pvigier/MyGUI-SFML/blob/master/examples/main.cpp) for a complete example.
+See the [main.cpp](https://github.com/pvigier/MyGUI-SFML/blob/master/examples/main.cpp) in `examples` for a complete working example.
 
 ## License
 
