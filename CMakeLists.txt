@@ -13,27 +13,30 @@ find_package(SFML 2.4 REQUIRED graphics window system)
 
 # MyGUI
 
+set(MYGUI_LIBRARY "" CACHE PATH "")
 add_library(mygui-engine SHARED IMPORTED)
 set_target_properties(mygui-engine PROPERTIES
-    IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/ext/lib/libMyGUIEngine.so")
+    IMPORTED_LOCATION "${MYGUI_LIBRARY}/lib/libMyGUIEngine.so")
 set_target_properties(mygui-engine PROPERTIES
-    INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/ext/include/MYGUI")
+    INTERFACE_INCLUDE_DIRECTORIES "${MYGUI_LIBRARY}/include/MYGUI")
 
 add_library(mygui-opengl3 STATIC IMPORTED)
 set_target_properties(mygui-opengl3 PROPERTIES
-    IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/ext/lib/libMyGUI.OpenGL3Platform.a")
+    IMPORTED_LOCATION "${MYGUI_LIBRARY}/lib/libMyGUI.OpenGL3Platform.a")
 set_target_properties(mygui-opengl3 PROPERTIES
-    INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/ext/include/MYGUI")
+    INTERFACE_INCLUDE_DIRECTORIES "${MYGUI_LIBRARY}/include/MYGUI")
 
 # mygui-sfml
 
 add_library(mygui-sfml
     src/Event.cpp
     src/SFMLImageLoader.cpp)
+target_link_libraries(mygui-sfml PUBLIC
+    sfml-graphics
+    mygui-engine
+    mygui-opengl3)
 target_include_directories(mygui-sfml PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
-    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/ext/include/MYGUI>
-    $<BUILD_INTERFACE:${SFML_INCLUDE_DIR}>
     $<INSTALL_INTERFACE:include>)
 
 # Examples
