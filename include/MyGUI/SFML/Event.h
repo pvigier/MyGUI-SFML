@@ -13,7 +13,7 @@ namespace MyGUI
 namespace SFML
 {
 
-void injectEvent(const sf::Event& event);
+bool injectEvent(const sf::Event& event);
 
 }
 

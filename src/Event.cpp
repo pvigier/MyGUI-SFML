@@ -11,43 +11,38 @@ namespace SFML
 MyGUI::MouseButton getMouseButton(sf::Mouse::Button button);
 MyGUI::KeyCode getKeyCode(sf::Keyboard::Key code);
 
-void injectEvent(const sf::Event& event)
+bool injectEvent(const sf::Event& event)
 {
     static auto mouseZ = 0.0f;
     auto& inputManager = MyGUI::InputManager::getInstance();
     switch (event.type)
     {
         case sf::Event::KeyPressed:
-            inputManager.injectKeyPress(getKeyCode(event.key.code));
-            break;
+            return inputManager.injectKeyPress(getKeyCode(event.key.code));
         case sf::Event::KeyReleased:
-            inputManager.injectKeyRelease(getKeyCode(event.key.code));
-            break;
+            return inputManager.injectKeyRelease(getKeyCode(event.key.code));
         case sf::Event::TextEntered:
             // Must filter some codes to have correct behavior
             if (event.text.unicode != 8 && // Backspace
                 event.text.unicode != 13 && // Return
                 event.text.unicode != 127) // Delete
-                inputManager.injectKeyPress(MyGUI::KeyCode::None, event.text.unicode);
+                return inputManager.injectKeyPress(MyGUI::KeyCode::None, event.text.unicode);
             break;
         case sf::Event::MouseButtonPressed:
-            inputManager.injectMousePress(event.mouseButton.x, event.mouseButton.y,
+            return inputManager.injectMousePress(event.mouseButton.x, event.mouseButton.y,
                 getMouseButton(event.mouseButton.button));
-            break;
         case sf::Event::MouseButtonReleased:
-            inputManager.injectMouseRelease(event.mouseButton.x, event.mouseButton.y,
+            return inputManager.injectMouseRelease(event.mouseButton.x, event.mouseButton.y,
                 getMouseButton(event.mouseButton.button));
-            break;
         case sf::Event::MouseMoved:
-            inputManager.injectMouseMove(event.mouseMove.x, event.mouseMove.y, mouseZ);
-            break;
+            return inputManager.injectMouseMove(event.mouseMove.x, event.mouseMove.y, mouseZ);
         case sf::Event::MouseWheelScrolled:
             mouseZ += event.mouseWheelScroll.delta;
-            inputManager.injectMouseMove(event.mouseWheelScroll.x, event.mouseWheelScroll.y, mouseZ);
-            break;
+            return inputManager.injectMouseMove(event.mouseWheelScroll.x, event.mouseWheelScroll.y, mouseZ);
         default:
             break;
     }
+    return false;
 }
 
 MyGUI::MouseButton getMouseButton(sf::Mouse::Button button)
