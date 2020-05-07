@@ -9,22 +9,37 @@ set(CMAKE_BUILD_TYPE Release)
 # SFML
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules" ${CMAKE_MODULE_PATH})
+
+set(SFML_DIR "" CACHE PATH "")
 find_package(SFML 2.4 REQUIRED graphics window system)
 
 # MyGUI
 
-set(MYGUI_LIBRARY "" CACHE PATH "")
-add_library(mygui-engine SHARED IMPORTED)
-set_target_properties(mygui-engine PROPERTIES
-    IMPORTED_LOCATION "${MYGUI_LIBRARY}/lib/libMyGUIEngine.so")
-set_target_properties(mygui-engine PROPERTIES
-    INTERFACE_INCLUDE_DIRECTORIES "${MYGUI_LIBRARY}/include/MYGUI")
+set(MYGUI_INCLUDE_DIR "" CACHE PATH "")
+set(MYGUI_ENGINE_LIBRARY "" CACHE FILEPATH "")
+set(MYGUI_OPENGL3_LIBRARY "" CACHE FILEPATH "")
+option(MYGUI_STATIC "" OFF)
+option(MYGUI_OPENGL3_STATIC "" OFF)
 
-add_library(mygui-opengl3 STATIC IMPORTED)
+if(MYGUI_STATIC)
+    add_library(mygui-engine STATIC IMPORTED)
+else()
+    add_library(mygui-engine SHARED IMPORTED)
+endif()
+set_target_properties(mygui-engine PROPERTIES
+    IMPORTED_LOCATION "${MYGUI_ENGINE_LIBRARY}")
+set_target_properties(mygui-engine PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES "${MYGUI_INCLUDE_DIR}")
+
+if(MYGUI_OPENGL3_STATIC)
+    add_library(mygui-opengl3 STATIC IMPORTED)
+else()
+    add_library(mygui-opengl3 SHARED IMPORTED)
+endif()
 set_target_properties(mygui-opengl3 PROPERTIES
-    IMPORTED_LOCATION "${MYGUI_LIBRARY}/lib/libMyGUI.OpenGL3Platform.a")
+    IMPORTED_LOCATION "${MYGUI_OPENGL3_LIBRARY}")
 set_target_properties(mygui-opengl3 PROPERTIES
-    INTERFACE_INCLUDE_DIRECTORIES "${MYGUI_LIBRARY}/include/MYGUI")
+    INTERFACE_INCLUDE_DIRECTORIES "${MYGUI_INCLUDE_DIR}")
 
 # mygui-sfml
 
