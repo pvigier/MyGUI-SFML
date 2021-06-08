@@ -11,6 +11,10 @@ set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules" ${CMAKE_MODULE_PATH})
 
 set(SFML_DIR "" CACHE PATH "")
+option(SFML_STATIC "" OFF)
+if(SFML_STATIC)
+    set(SFML_STATIC_LIBRARIES TRUE)
+endif()
 find_package(SFML 2.4 REQUIRED graphics window system)
 
 # MyGUI
